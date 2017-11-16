@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mock-mongo-db aggregate with lookup 1`] = `
+Array [
+  Object {
+    "_id": "foo1",
+    "barId": "bar1",
+    "bars": Array [
+      Object {
+        "_id": "bar1",
+      },
+    ],
+  },
+]
+`;
+
+exports[`mock-mongo-db simple aggregate 1`] = `
+Array [
+  Object {
+    "_id": "anotherObj",
+    "newProp": 3,
+  },
+  Object {
+    "_id": "myObj",
+    "newProp": 2,
+  },
+]
+`;

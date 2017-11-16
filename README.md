@@ -1,2 +1,2 @@
 # mock-mongo-db
-Mock MongoDB based on mingo.
+A drop in mock MongoDB. This library is a small wrapper around [mingo](https://github.com/kofrasa/mingo).
