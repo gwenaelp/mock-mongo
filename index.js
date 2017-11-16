@@ -1,6 +1,6 @@
 const mingo = require('mingo')
 
-module.exports = class MockMongoDb {
+module.exports = class MockMongo {
   constructor(data) {
     this.data = data
     this.collection = this.collection.bind(this)

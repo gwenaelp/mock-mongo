@@ -1,8 +1,8 @@
-const MockMongoDb = require('.')
+const MockMongo = require('.')
 
-describe('mock-mongo-db', () => {
+describe('mock-mongo', () => {
   test('findOne', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       col: [{ _id: 'myObj', foo: 'bar' }],
     })
     const obj = db.collection('col').findOne({ _id: 'myObj' })
@@ -10,7 +10,7 @@ describe('mock-mongo-db', () => {
   })
 
   test('find', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       col: [
         { _id: 'myObj', foo: 'bar' },
         { _id: 'myOtherObj', foo: 'bar' },
@@ -26,7 +26,7 @@ describe('mock-mongo-db', () => {
   })
 
   test('limit', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       col: [
         { _id: 'myObj', foo: 'bar' },
         { _id: 'myOtherObj', foo: 'bar' },
@@ -43,7 +43,7 @@ describe('mock-mongo-db', () => {
   })
 
   test('sort', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       col: [
         { _id: 'myObj', foo: 1 },
         { _id: 'myOtherObj', foo: 3 },
@@ -62,7 +62,7 @@ describe('mock-mongo-db', () => {
   })
 
   test('limit + sort', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       col: [
         { _id: 'myObj', foo: 1 },
         { _id: 'myOtherObj', foo: 3 },
@@ -81,7 +81,7 @@ describe('mock-mongo-db', () => {
   })
 
   test('simple aggregate', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       col: [
         { _id: 'myObj', foo: 1 },
         { _id: 'myOtherObj', foo: 3 },
@@ -105,7 +105,7 @@ describe('mock-mongo-db', () => {
   })
 
   test('aggregate with lookup', () => {
-    const db = new MockMongoDb({
+    const db = new MockMongo({
       foos: [{ _id: 'foo1', barId: 'bar1' }],
       bars: [{ _id: 'bar1' }],
     })

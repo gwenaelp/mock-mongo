@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`mock-mongo-db aggregate with lookup 1`] = `
+exports[`mock-mongo aggregate with lookup 1`] = `
 Array [
   Object {
     "_id": "foo1",
@@ -14,7 +14,7 @@ Array [
 ]
 `;
 
-exports[`mock-mongo-db simple aggregate 1`] = `
+exports[`mock-mongo simple aggregate 1`] = `
 Array [
   Object {
     "_id": "anotherObj",
