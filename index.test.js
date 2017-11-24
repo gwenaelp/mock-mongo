@@ -126,4 +126,139 @@ describe('mock-mongo', () => {
 
     expect(result).toMatchSnapshot()
   })
+
+  test('update', () => {
+    const db = new MockMongo({
+      objs: [
+        { _id: 'foo1', a: 1 },
+        { _id: 'bar1', a: 1 },
+        { _id: 'bar1', a: 2 },
+      ],
+    })
+
+    db.collection('objs').update({ a: 1 }, { $set: { a: 3 } })
+
+    const as = db
+      .collection('objs')
+      .find()
+      .map(obj => obj.a)
+
+    expect(as.filter(a => a === 1)).toHaveLength(1)
+    expect(as.filter(a => a === 2)).toHaveLength(1)
+    expect(as.filter(a => a === 3)).toHaveLength(1)
+  })
+
+  test('multi update', () => {
+    const db = new MockMongo({
+      objs: [
+        { _id: 'foo1', a: 1 },
+        { _id: 'bar1', a: 1 },
+        { _id: 'bar1', a: 2 },
+      ],
+    })
+
+    db.collection('objs').update({ a: 1 }, { $set: { a: 3 } }, { multi: true })
+
+    const as = db
+      .collection('objs')
+      .find()
+      .map(obj => obj.a)
+
+    expect(as.filter(a => a === 3)).toHaveLength(2)
+    expect(as.filter(a => a === 2)).toHaveLength(1)
+  })
+
+  test('update with nothing to update', () => {
+    const db = new MockMongo({
+      objs: [
+        { _id: 'foo1', a: 1 },
+        { _id: 'bar1', a: 1 },
+        { _id: 'bar1', a: 2 },
+      ],
+    })
+
+    db.collection('objs').update({ a: 3 }, { $set: { a: 3 } })
+
+    const as = db
+      .collection('objs')
+      .find()
+      .map(obj => obj.a)
+
+    expect(as.filter(a => a === 1)).toHaveLength(2)
+    expect(as.filter(a => a === 2)).toHaveLength(1)
+  })
+
+  test('findOneAndUpdate', () => {
+    const db = new MockMongo({
+      objs: [
+        { _id: 'foo1', a: 1 },
+        { _id: 'bar1', a: 1 },
+        { _id: 'bar1', a: 2 },
+      ],
+    })
+
+    const obj = db
+      .collection('objs')
+      .findOneAndUpdate({ a: 1 }, { $set: { a: 3 } })
+
+    const as = db
+      .collection('objs')
+      .find()
+      .map(obj => obj.a)
+
+    expect(as.filter(a => a === 1)).toHaveLength(1)
+    expect(as.filter(a => a === 2)).toHaveLength(1)
+    expect(as.filter(a => a === 3)).toHaveLength(1)
+
+    expect(obj.a).toBe(1)
+  })
+
+  test('findOneAndUpdate with returnOriginal', () => {
+    const db = new MockMongo({
+      objs: [
+        { _id: 'foo1', a: 1 },
+        { _id: 'bar1', a: 1 },
+        { _id: 'bar1', a: 2 },
+      ],
+    })
+
+    const obj = db
+      .collection('objs')
+      .findOneAndUpdate({ a: 1 }, { $set: { a: 3 } }, { returnOriginal: false })
+
+    const as = db
+      .collection('objs')
+      .find()
+      .map(obj => obj.a)
+
+    expect(as.filter(a => a === 1)).toHaveLength(1)
+    expect(as.filter(a => a === 2)).toHaveLength(1)
+    expect(as.filter(a => a === 3)).toHaveLength(1)
+
+    expect(obj.a).toBe(3)
+  })
+
+  test('findOneAndUpdate with nothing to update', () => {
+    const db = new MockMongo({
+      objs: [
+        { _id: 'foo1', a: 1 },
+        { _id: 'bar1', a: 1 },
+        { _id: 'bar1', a: 2 },
+      ],
+    })
+
+    const obj = db
+      .collection('objs')
+      .findOneAndUpdate({ a: 3 }, { $set: { a: 3 } })
+
+    const as = db
+      .collection('objs')
+      .find()
+      .map(obj => obj.a)
+
+    expect(as.filter(a => a === 1)).toHaveLength(2)
+    expect(as.filter(a => a === 2)).toHaveLength(1)
+
+    expect(obj).toBeUndefined()
+  })
 })

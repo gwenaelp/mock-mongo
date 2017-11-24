@@ -1,5 +1,10 @@
 const mingo = require('mingo')
 
+const updateDocument = (document, update) =>
+  Object.keys(update.$set).forEach(key => {
+    document[key] = update.$set[key]
+  })
+
 module.exports = class MockMongo {
   constructor(data) {
     this.data = data
@@ -31,6 +36,41 @@ class Collection {
   findOne(query) {
     const cursor = mingo.find(this.data[this.collectionName], query)
     return cursor.first()
+  }
+
+  update(filter, update, options = {}) {
+    const cursor = mingo.find(this.data[this.collectionName], filter)
+    const objects = cursor.all()
+    if (options.multi) {
+      objects.forEach(obj => updateDocument(obj, update))
+    } else if (objects[0]) {
+      updateDocument(objects[0], update)
+    }
+  }
+
+  findOneAndUpdate(filter, update, options = {}) {
+    if (options.returnOriginal === undefined) {
+      options.returnOriginal = true
+    }
+    const existingObj = this.findOne(filter)
+
+    if (!existingObj) {
+      return
+    }
+
+    let ret
+    if (options.returnOriginal) {
+      ret = { ...existingObj }
+    }
+
+    this.update(filter, update, { multi: false })
+
+    if (!options.returnOriginal) {
+      // existingObj will have been updated by the call to update
+      ret = existingObj
+    }
+
+    return ret
   }
 
   aggregate(pipeline) {
