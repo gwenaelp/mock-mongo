@@ -29,8 +29,7 @@ class Collection {
   }
 
   findOne(query) {
-    const mingoQuery = new mingo.Query(query)
-    const cursor = mingoQuery.find(this.data[this.collectionName])
+    const cursor = mingo.find(this.data[this.collectionName], query)
     return cursor.first()
   }
 
