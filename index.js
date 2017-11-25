@@ -52,25 +52,22 @@ class Collection {
     if (options.returnOriginal === undefined) {
       options.returnOriginal = true
     }
+
     const existingObj = this.findOne(filter)
 
     if (!existingObj) {
       return
     }
 
-    let ret
-    if (options.returnOriginal) {
-      ret = { ...existingObj }
-    }
+    const existingObjCopy = { ...existingObj }
 
     this.update(filter, update, { multi: false })
 
     if (!options.returnOriginal) {
       // existingObj will have been updated by the call to update
-      ret = existingObj
+      return existingObj
     }
-
-    return ret
+    return existingObjCopy
   }
 
   aggregate(pipeline) {
