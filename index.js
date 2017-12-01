@@ -59,7 +59,7 @@ class Collection {
       return
     }
 
-    const existingObjCopy = { ...existingObj }
+    const existingObjCopy = Object.assign({}, existingObj)
 
     this.update(filter, update, { multi: false })
 
