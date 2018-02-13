@@ -261,4 +261,23 @@ describe('mock-mongo', () => {
 
     expect(obj).toBeUndefined()
   })
+
+  test('unwind', () => {
+    const db = new MockMongo({
+      objs: [
+        {
+          _id: 'foo',
+          arr: [1, 2, 3, 4, 5],
+        },
+      ],
+    })
+
+    const res = db
+      .collection('objs')
+      .aggregate([{ $unwind: '$arr' }])
+      .toArray()
+
+    expect(res).toHaveLength(5)
+    expect(res).toMatchSnapshot()
+  })
 })

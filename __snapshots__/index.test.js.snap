@@ -26,3 +26,28 @@ Array [
   },
 ]
 `;
+
+exports[`mock-mongo unwind 1`] = `
+Array [
+  Object {
+    "_id": "foo",
+    "arr": 1,
+  },
+  Object {
+    "_id": "foo",
+    "arr": 2,
+  },
+  Object {
+    "_id": "foo",
+    "arr": 3,
+  },
+  Object {
+    "_id": "foo",
+    "arr": 4,
+  },
+  Object {
+    "_id": "foo",
+    "arr": 5,
+  },
+]
+`;
