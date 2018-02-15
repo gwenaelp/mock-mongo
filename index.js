@@ -35,7 +35,7 @@ class Collection {
 
   findOne(query) {
     const cursor = mingo.find(this.data[this.collectionName], query)
-    return cursor.first()
+    return cursor.next()
   }
 
   update(filter, update, options = {}) {
