@@ -40,6 +40,8 @@ class Collection {
 
   insertOne(object) {
     this.insertMany([object])
+
+    return { result: { ok: 1 }, ops: [object] }
   }
 
   insertMany(objects) {
@@ -60,6 +62,8 @@ class Collection {
       ...this.data[this.collectionName],
       ...objects,
     ]
+
+    return { result: { ok: 1 } }
   }
 
   update(filter, update, options = {}) {
