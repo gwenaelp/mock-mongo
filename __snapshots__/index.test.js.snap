@@ -14,6 +14,35 @@ Array [
 ]
 `;
 
+exports[`mock-mongo insertMany 1`] = `
+Object {
+  "foos": Array [
+    Object {
+      "_id": "foo1",
+      "a": 1,
+    },
+    Object {
+      "_id": "foo2",
+    },
+    Object {
+      "_id": "foo3",
+      "a": 1,
+    },
+  ],
+}
+`;
+
+exports[`mock-mongo insertOne 1`] = `
+Object {
+  "stuff": Array [
+    Object {
+      "_id": "myObj",
+      "foo": "bar",
+    },
+  ],
+}
+`;
+
 exports[`mock-mongo simple aggregate 1`] = `
 Array [
   Object {

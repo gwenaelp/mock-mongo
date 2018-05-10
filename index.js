@@ -38,6 +38,30 @@ class Collection {
     return cursor.next()
   }
 
+  insertOne(object) {
+    this.insertMany([object])
+  }
+
+  insertMany(objects) {
+    const existingIds = new Set(this.data[this.collectionName].map(o => o._id))
+    for (const object of objects) {
+      if (!object._id) {
+        throw new Error(
+          'mock-mongo does not currently support inserting objects without _id',
+        )
+      }
+      if (existingIds.has(object._id)) {
+        throw new Error(`Object with _id ${object._id} already in collection`)
+      }
+      existingIds.add(object._id)
+    }
+
+    this.data[this.collectionName] = [
+      ...this.data[this.collectionName],
+      ...objects,
+    ]
+  }
+
   update(filter, update, options = {}) {
     const cursor = mingo.find(this.data[this.collectionName], filter)
     const objects = cursor.all()

@@ -127,6 +127,28 @@ describe('mock-mongo', () => {
     expect(result).toMatchSnapshot()
   })
 
+  test('insertOne', () => {
+    const db = new MockMongo({})
+
+    db.collection('stuff').insertOne({ _id: 'myObj', foo: 'bar' })
+    const stuff = db
+      .collection('stuff')
+      .find()
+      .toArray()
+
+    expect(db.data).toMatchSnapshot()
+  })
+
+  test('insertMany', () => {
+    const db = new MockMongo({
+      foos: [{ _id: 'foo1', a: 1 }],
+    })
+
+    db.collection('foos').insertMany([{ _id: 'foo2' }, { _id: 'foo3', a: 1 }])
+
+    expect(db.data).toMatchSnapshot()
+  })
+
   test('update', () => {
     const db = new MockMongo({
       objs: [
