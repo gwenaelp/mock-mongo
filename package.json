@@ -1,6 +1,6 @@
 {
   "name": "mock-mongo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "https://github.com/jsoendermann/mock-mongo",
   "author": "Jan Soendermann <jan.soendermann+git@gmail.com>",
