@@ -9,7 +9,8 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "mingo": "^2.2.0"
+    "mingo": "^2.2.0",
+    "mongodb": "3.5.9"
   },
   "devDependencies": {
     "jest": "^22.3.0"

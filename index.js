@@ -1,19 +1,45 @@
 const mingo = require('mingo')
+const oid = require('mongodb').ObjectID;
 
-const updateDocument = (document, update) =>
+const updateDocument = (document, update) => {
   Object.keys(update.$set).forEach(key => {
     document[key] = update.$set[key]
-  })
+  });
+}
 
 module.exports = class MockMongo {
-  constructor(data) {
-    this.data = data
+  constructor(data, prefix) {
+    console.log('initialize MockMongo', prefix)
+    if (prefix) {
+      const prefixedData = {};
+      for (let k of Object.keys(data)) {
+        prefixedData[prefix + '__' + k] = data[k];
+      }
+      this.data = prefixedData;
+    } else {
+      this.data = data
+    }
+
     this.collection = this.collection.bind(this)
+    this.prefix = prefix;
   }
 
   collection(name) {
-    this.data[name] = this.data[name] || []
-    return new Collection(this.data, name)
+    const dataKey = this.prefix ? this.prefix + '__' + name : name;
+    this.data[dataKey] = this.data[dataKey] || []
+    return new Collection(this.data, dataKey)
+  }
+  connect(url, options, callback) {
+    callback(undefined, this);
+  }
+  db () {
+    return this;
+  }
+}
+
+class ChangeStream {
+  on () {
+
   }
 }
 
@@ -28,13 +54,13 @@ class Collection {
   }
 
   find(query) {
-    const cursor = mingo.find(this.data[this.collectionName], query)
+    const cursor = mingo.find(this.data[this.collectionName], query || {})
     cursor.toArray = cursor.all
     return cursor
   }
 
   findOne(query) {
-    const cursor = mingo.find(this.data[this.collectionName], query)
+    const cursor = mingo.find(this.data[this.collectionName], query || {})
     return cursor.next()
   }
 
@@ -48,9 +74,7 @@ class Collection {
     const existingIds = new Set(this.data[this.collectionName].map(o => o._id))
     for (const object of objects) {
       if (!object._id) {
-        throw new Error(
-          'mock-mongo does not currently support inserting objects without _id',
-        )
+        object._id = oid();
       }
       if (existingIds.has(object._id)) {
         throw new Error(`Object with _id ${object._id} already in collection`)
@@ -76,6 +100,22 @@ class Collection {
     }
   }
 
+  updateOne(filter, update, options = {}) {
+    const cursor = mingo.find(this.data[this.collectionName], filter)
+    const objects = cursor.all()
+    if (objects[0]) {
+      updateDocument(objects[0], update)
+    } else {
+      if (options.upsert) {
+        const objectToInsert = update.$set || update;
+        if (!objectToInsert._id) {
+          objectToInsert._id = oid();
+        }
+        this.insertOne(objectToInsert);
+      }
+    }
+  }
+
   findOneAndUpdate(filter, update, options = {}) {
     if (options.returnOriginal === undefined) {
       options.returnOriginal = true
@@ -93,9 +133,9 @@ class Collection {
 
     if (!options.returnOriginal) {
       // existingObj will have been updated by the call to update
-      return existingObj
+      return { value: existingObj }
     }
-    return existingObjCopy
+    return { value: existingObjCopy };
   }
 
   aggregate(pipeline) {
@@ -121,5 +161,9 @@ class Collection {
     return {
       toArray: () => result,
     }
+  }
+
+  watch () {
+    return new ChangeStream();
   }
 }
